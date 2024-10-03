@@ -8,8 +8,6 @@ namespace MiniProjectW40
     */
     public class ProductList : List<Product>
     {
-        private List<Product> productList = [];
-
         /*
             Method:     FilteredByName 
             in:         searchName     a string containing product name to use as filter

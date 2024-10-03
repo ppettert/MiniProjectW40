@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using static System.Console;
 using System.Text.Json;
+using System.Formats.Asn1;
 
 namespace MiniProjectW40
 {
@@ -28,7 +29,8 @@ namespace MiniProjectW40
 
             if( inputString is not null )
             {
-                List<Product> foundProducts = productList.FilteredByName( inputString.Trim() );
+                String trimmedInputString = inputString.Trim();
+                List<Product> foundProducts = productList.FilteredByName( trimmedInputString );
 
                 if( foundProducts.Count == 0 )
                 {
@@ -36,10 +38,21 @@ namespace MiniProjectW40
                 }
                 else
                 {
+                    List<Product> sortedProductList = productList.OrderBy( product => product.Price ).ToList();
+                    
                     WriteLine("--------------------------------------------------");
-                    foreach( Product product in foundProducts )
+                    foreach( Product product in sortedProductList )
                     {
-                        WriteLine( product.ToString() );
+                        if( product.Name.Equals( trimmedInputString ) )
+                        {
+                            ForegroundColor = ConsoleColor.Magenta;
+                            WriteLine( product.ToString() );
+                            ResetColor();
+                        }
+                        else
+                        {
+                            WriteLine( product.ToString() );
+                        }
                     }
                     WriteLine("--------------------------------------------------");
                 }
@@ -109,13 +122,23 @@ namespace MiniProjectW40
                 Write( "Enter a Price: ");
                 string? inputString = ReadLine();
 
-                if( int.TryParse( inputString, out price ) ) 
+                if( inputString is not null )
                 {
-                    done = true;
-                }
-                else
-                {
-                    WriteLine("Price incorrectly entered");
+                    string trimmedInputString = inputString.Trim();
+
+                    if (trimmedInputString.ToUpper().Equals("Q"))
+                    {
+                        // User wants to quit
+                        return true;
+                    }
+                    else if (int.TryParse(inputString, out price))
+                    {
+                        done = true;
+                    }
+                    else
+                    {
+                        WriteLine("Price incorrectly entered");
+                    }
                 }
             }
 
@@ -134,6 +157,14 @@ namespace MiniProjectW40
         */
         private static void PrintSummary( ProductList productList )
         {
+            if( productList.Count == 0 )
+            {
+                ForegroundColor = ConsoleColor.Red;
+                WriteLine("Empty list!");
+                ResetColor();
+                return;
+            } 
+
             WriteLine("------------------------------------------------------------");
             ForegroundColor = ConsoleColor.Green;
             WriteLine("Category".PadRight(20) + "Product".PadRight(20) + "Price");
@@ -165,14 +196,16 @@ namespace MiniProjectW40
 
             bool done = false;
             
-
             // Initial product input Loop
             while( !done )
             {
                 done = AddProduct( productList );
             }
 
-            PrintSummary( productList );
+            if( productList.Count > 0 ) 
+            {
+                PrintSummary( productList );
+            }    
 
             done = false; 
 
@@ -202,12 +235,31 @@ namespace MiniProjectW40
                     }
                     else if( inputCommand.Equals("P") )
                     {
-                        done = AddProduct(productList);
+                        while( !done )
+                        {
+                            done = AddProduct( productList );
+                        }
+
+                        if( productList.Count > 0 ) 
+                        {
+                            PrintSummary( productList );
+                        }    
+
+                        done = false;
                     }
                     else if( inputCommand.Equals("I"))
                     {
                         // Undocumented feature, just for testing ;) 
-                        string jsonString = """[{"Category": "Electronics","Name": "TV", "Price": 123}]""";
+                        string jsonString = """
+                                            [
+                                                {"Category": "Electronics", "Name": "Computer",     "Price": 19900},   
+                                                {"Category": "Electronics", "Name": "Radio",        "Price": 199},
+                                                {"Category": "Electronics", "Name": "TV",           "Price": 6990},
+                                                {"Category": "Toy",         "Name": "Teddybear",    "Price": 99},
+                                                {"Category": "Tool",        "Name": "Powerdrill",   "Price": 599},
+                                                {"Category": "Electronics", "Name": "TV",           "Price": 26990}
+                                            ]
+                                            """;
                         ProductList? tempProductList = JsonSerializer.Deserialize<ProductList>( jsonString, jsonOptions );
                         if( tempProductList is not null )
                         {
@@ -227,8 +279,8 @@ namespace MiniProjectW40
 
                 }
 
-                if( done )
-                {
+                if( done && productList.Count > 0 )
+                {                                   
                     PrintSummary( productList );
                 }
 
