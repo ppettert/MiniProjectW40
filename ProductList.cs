@@ -17,8 +17,7 @@ namespace MiniProjectW40
         {
             return this.Where(product => product.Name.Equals(searchName, comparisonType: StringComparison.OrdinalIgnoreCase)).ToList();
         }
-    
-        
+
     }
 
 }

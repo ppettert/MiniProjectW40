@@ -40,7 +40,7 @@ namespace MiniProjectW40
                 {
                     List<Product> sortedProductList = productList.OrderBy( product => product.Price ).ToList();
                     
-                    WriteLine("--------------------------------------------------");
+                    WriteLine("".PadRight(50,'-'));
                     ForegroundColor = ConsoleColor.Green;
                     WriteLine("Category".PadRight(20) + "Product".PadRight(20) + "Price");
                     ResetColor();
@@ -58,7 +58,7 @@ namespace MiniProjectW40
                             WriteLine( product.ToString() );
                         }
                     }
-                    WriteLine("--------------------------------------------------");
+                    WriteLine("".PadRight(50,'-'));
                 }
 
             }
@@ -75,6 +75,11 @@ namespace MiniProjectW40
             string productCategory = "";
             string productName = "";
             int price = 0;
+
+            WriteLine("".PadRight(60,'-'));
+            ForegroundColor = ConsoleColor.Yellow;
+            WriteLine("To enter a new product follow the steps or enter 'Q' to Quit");
+            ResetColor();
 
             bool done = false;
             while( !done )
@@ -169,7 +174,7 @@ namespace MiniProjectW40
                 return;
             } 
 
-            WriteLine("------------------------------------------------------------");
+            WriteLine("".PadRight( 50, '-' ) );
             ForegroundColor = ConsoleColor.Green;
             WriteLine("Category".PadRight(20) + "Product".PadRight(20) + "Price");
             ResetColor();
@@ -180,9 +185,10 @@ namespace MiniProjectW40
             {
                 WriteLine( product.ToString() );
             }
+
             WriteLine();
             WriteLine("".PadRight(20) + "Total Amount: ".PadRight(20) + productList.Sum( product => product.Price ) );
-            WriteLine("------------------------------------------------------------");
+            WriteLine("".PadRight( 50, '-' ) );
 
         }
 
@@ -193,11 +199,6 @@ namespace MiniProjectW40
         {
             ProductList? productList = [];
             
-            WriteLine("------------------------------------------------------------");
-            ForegroundColor = ConsoleColor.Yellow;
-            WriteLine("To enter a new product follow the steps or enter 'Q' to Quit");
-            ResetColor();
-
             bool done = false;
             
             // Initial product input Loop
