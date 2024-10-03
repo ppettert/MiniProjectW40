@@ -41,6 +41,10 @@ namespace MiniProjectW40
                     List<Product> sortedProductList = productList.OrderBy( product => product.Price ).ToList();
                     
                     WriteLine("--------------------------------------------------");
+                    ForegroundColor = ConsoleColor.Green;
+                    WriteLine("Category".PadRight(20) + "Product".PadRight(20) + "Price");
+                    ResetColor();
+                    
                     foreach( Product product in sortedProductList )
                     {
                         if( product.Name.Equals( trimmedInputString ) )
