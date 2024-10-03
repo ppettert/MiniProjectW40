@@ -36,10 +36,12 @@ namespace MiniProjectW40
                 }
                 else
                 {
+                    WriteLine("--------------------------------------------------")
                     foreach( Product product in foundProducts )
                     {
                         WriteLine( product.ToString() );
                     }
+                    WriteLine("--------------------------------------------------")
                 }
 
             }

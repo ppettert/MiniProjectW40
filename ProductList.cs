@@ -12,17 +12,15 @@ namespace MiniProjectW40
 
         /*
             Method:     FilteredByName 
-            in:         productName     a string containing product name to use as filter
+            in:         searchName     a string containing product name to use as filter
             returns:    the filtered List with Product items matching productName string
         */
-        public List<Product> FilteredByName(string productName)
+        public List<Product> FilteredByName(string searchName)
         {
-            List<Product> filteredList = productList.Where(product => product.Name.Equals(productName)).ToList();
-            
-          //  List<Product> filteredList = productList.Where(product => product.Price == 111).ToList();
-            return filteredList;
+            return this.Where(product => product.Name.Equals(searchName, comparisonType: StringComparison.OrdinalIgnoreCase)).ToList();
         }
-
+    
+        
     }
 
 }
