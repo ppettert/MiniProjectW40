@@ -36,12 +36,12 @@ namespace MiniProjectW40
                 }
                 else
                 {
-                    WriteLine("--------------------------------------------------")
+                    WriteLine("--------------------------------------------------");
                     foreach( Product product in foundProducts )
                     {
                         WriteLine( product.ToString() );
                     }
-                    WriteLine("--------------------------------------------------")
+                    WriteLine("--------------------------------------------------");
                 }
 
             }
@@ -120,10 +120,36 @@ namespace MiniProjectW40
             }
 
             productList.Add( new Product( productCategory, productName, price ) );
+            ForegroundColor = ConsoleColor.Green;
+            WriteLine("Product successfully added!");
+            ResetColor();
             return false;
 
         }    
 
+
+        /*
+            Main loop helper function for printing product list and total price
+            in:         productList    ProductList to print
+        */
+        private static void PrintSummary( ProductList productList )
+        {
+            WriteLine("------------------------------------------------------------");
+            ForegroundColor = ConsoleColor.Green;
+            WriteLine("Category".PadRight(20) + "Product".PadRight(20) + "Price");
+            ResetColor();
+            
+            List<Product> sortedProductList = productList.OrderBy( product => product.Price ).ToList();
+
+            foreach( Product product in sortedProductList )
+            {
+                WriteLine( product.ToString() );
+            }
+            WriteLine();
+            WriteLine("".PadRight(20) + "Total Amount: ".PadRight(20) + productList.Sum( product => product.Price ) );
+            WriteLine("------------------------------------------------------------");
+
+        }
 
         /*
             Main Program entry point
@@ -131,21 +157,34 @@ namespace MiniProjectW40
         private static void Main( string[] args )
         {
             ProductList? productList = [];
-
+            
             WriteLine("------------------------------------------------------------");
-            WriteLine("To Enter a new product follow the steps or Enter 'Q' to Quit");
+            ForegroundColor = ConsoleColor.Yellow;
+            WriteLine("To enter a new product follow the steps or enter 'Q' to Quit");
+            ResetColor();
 
             bool done = false;
             
-            done = AddProduct( productList );
+
+            // Initial product input Loop
+            while( !done )
+            {
+                done = AddProduct( productList );
+            }
+
+            PrintSummary( productList );
+
+            done = false; 
+
 
             var jsonOptions = new JsonSerializerOptions { WriteIndented = true };
             
             // Main Input Loop
             while( !done ) 
             {
-
+                ForegroundColor = ConsoleColor.Cyan;
                 WriteLine("P to enter new product, S to search product, Q to quit: ");
+                ResetColor();
 
                 string? inputString = ReadLine();
 
@@ -188,15 +227,14 @@ namespace MiniProjectW40
 
                 }
 
-            }
+                if( done )
+                {
+                    PrintSummary( productList );
+                }
 
-            WriteLine("------------------------------------------------------------");
-            WriteLine("Category".PadRight(20) + "Product".PadRight(20) + "Price");
-            foreach( Product product in productList )
-            {
-                WriteLine( product.ToString() );
-            }
-            WriteLine("------------------------------------------------------------");
+            } // while
+
+
         }
     }
 
