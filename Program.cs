@@ -17,7 +17,7 @@ namespace MiniProjectW40
     {
 
         /*
-            Main loop helper function for searching in ProductList
+            Main loop helper function to search from user input in ProductList and print it
             in:  productList    a ProductList to search within
         */
         private static void Search( ProductList productList )
@@ -48,12 +48,13 @@ namespace MiniProjectW40
 
         /*
             Main loop helper function for input and adding of new Product
-            in:   productList    ProductList to add product to
+            in:         productList    ProductList to add product to
+            returns:    bool           true if user enter Q for Quit, otherwise false
         */
-        private static void AddProduct( ProductList productList )
+        private static bool AddProduct( ProductList productList )
         {
-            string productCategory="";
-            string productName="";
+            string productCategory = "";
+            string productName = "";
             int price = 0;
 
             bool done = false;
@@ -63,7 +64,14 @@ namespace MiniProjectW40
                 string? inputString = ReadLine();
                 if( inputString is not null )
                 {
-                    if( !inputString.Trim().Equals("") )
+                    string trimmedInputString = inputString.Trim();
+
+                    if( trimmedInputString.ToUpper().Equals("Q") )
+                    {
+                        // User wants to quit
+                        return true;  
+                    }
+                    else if( !trimmedInputString.Equals("") )
                     {
                         productCategory = inputString.Trim();
                         done = true;
@@ -78,7 +86,14 @@ namespace MiniProjectW40
                 string? inputString = ReadLine();
                 if( inputString is not null )
                 {
-                    if( !inputString.Trim().Equals("") )
+                    string trimmedInputString = inputString.Trim();
+
+                    if( trimmedInputString.ToUpper().Equals("Q") )
+                    {
+                        // User wants to quit
+                        return true;  
+                    }
+                    else if( !inputString.Trim().Equals("") )
                     {
                         productName = inputString.Trim();
                         done = true;
@@ -103,27 +118,32 @@ namespace MiniProjectW40
             }
 
             productList.Add( new Product( productCategory, productName, price ) );
-
+            return false;
 
         }    
+
 
         /*
             Main Program entry point
         */
         private static void Main( string[] args )
         {
-            ProductList productList = [];
+            ProductList? productList = [];
 
             WriteLine("------------------------------------------------------------");
             WriteLine("To Enter a new product follow the steps or Enter 'Q' to Quit");
 
             bool done = false;
+            
+            done = AddProduct( productList );
 
+            var jsonOptions = new JsonSerializerOptions { WriteIndented = true };
+            
             // Main Input Loop
             while( !done ) 
             {
 
-                WriteLine("P new product, S search product, Q to quit: ");
+                WriteLine("P to enter new product, S to search product, Q to quit: ");
 
                 string? inputString = ReadLine();
 
@@ -141,13 +161,23 @@ namespace MiniProjectW40
                     }
                     else if( inputCommand.Equals("P") )
                     {
-                        AddProduct(productList);
+                        done = AddProduct(productList);
+                    }
+                    else if( inputCommand.Equals("I"))
+                    {
+                        // Undocumented feature, just for testing ;) 
+                        string jsonString = """[{"Category": "Electronics","Name": "TV", "Price": 123}]""";
+                        ProductList? tempProductList = JsonSerializer.Deserialize<ProductList>( jsonString, jsonOptions );
+                        if( tempProductList is not null )
+                        {
+                            productList = tempProductList;
+                        }
+
                     }
                     else if( inputCommand.Equals("J") )
                     {
                         // Dump as JSON
-                        var jsonSerializerOptions = new JsonSerializerOptions { WriteIndented = true };
-                        WriteLine( JsonSerializer.Serialize( productList, jsonSerializerOptions ) );
+                        WriteLine( JsonSerializer.Serialize( productList, jsonOptions ) );
                     }
                     else
                     {

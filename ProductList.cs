@@ -17,7 +17,10 @@ namespace MiniProjectW40
         */
         public List<Product> FilteredByName(string productName)
         {
-            return productList.Where(product => product.Name.Equals(productName)).ToList();
+            List<Product> filteredList = productList.Where(product => product.Name.Contains(productName)).ToList();
+            
+          //  List<Product> filteredList = productList.Where(product => product.Price == 111).ToList();
+            return filteredList;
         }
 
     }
