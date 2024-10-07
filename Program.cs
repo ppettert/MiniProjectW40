@@ -25,6 +25,8 @@ namespace MiniProjectW40
         {
             Write("Enter a Product Name to search for: ");
 
+
+            // string? trimmedInputString = Console.ReadLine()?.Trim(); 
             string? inputString = ReadLine();
 
             if( inputString is not null )
