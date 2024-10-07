@@ -32,6 +32,7 @@ namespace MiniProjectW40
                 String trimmedInputString = inputString.Trim();
                 List<Product> foundProducts = productList.FilteredByName( trimmedInputString );
 
+                // TODO: Change .Count calls to Any() ?
                 if( foundProducts.Count == 0 )
                 {
                     WriteLine("Not found.");
