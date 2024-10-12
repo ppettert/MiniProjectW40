@@ -6,11 +6,8 @@
     Each Product has property Category, ProductName, Price
 */
 
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using static System.Console;
 using System.Text.Json;
-using System.Formats.Asn1;
 
 namespace MiniProjectW40
 {
@@ -24,7 +21,6 @@ namespace MiniProjectW40
         private static void Search( ProductList productList )
         {
             Write("Enter a Product Name to search for: ");
-
 
             // string? trimmedInputString = Console.ReadLine()?.Trim(); 
             string? inputString = ReadLine();
